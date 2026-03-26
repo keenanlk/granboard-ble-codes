@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GranBoard BLE Example</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; }
+    button { font-size: 1rem; padding: 0.5rem 1rem; margin: 0.25rem; cursor: pointer; }
+    #log { background: #111; color: #0f0; padding: 1rem; font-family: monospace; font-size: 0.85rem; height: 300px; overflow-y: auto; white-space: pre-wrap; border-radius: 4px; }
+    .controls { margin: 1rem 0; }
+    .controls button:disabled { opacity: 0.4; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+  <h1>GranBoard BLE Example</h1>
+  <p>Requires a browser with <a href="https://caniuse.com/web-bluetooth">Web Bluetooth</a> support (Chrome, Edge, Opera).</p>
+
+  <div class="controls">
+    <button id="btnConnect">Connect</button>
+    <button id="btnRed" disabled>Red Ring</button>
+    <button id="btnGreen" disabled>Green Ring</button>
+    <button id="btnBlink" disabled>Blink White</button>
+    <button id="btnWave" disabled>Wave</button>
+    <button id="btnClear" disabled>Clear</button>
+  </div>
+
+  <div id="log"></div>
+
+  <script type="module" src="dist/granboard.js"></script>
+  <script type="module">
+    const logEl = document.getElementById("log");
+    const log = (msg) => { logEl.textContent += msg + "\n"; logEl.scrollTop = logEl.scrollHeight; };
+
+    const buttons = ["btnRed", "btnGreen", "btnBlink", "btnWave", "btnClear"];
+    const setButtonsEnabled = (enabled) => buttons.forEach(id => document.getElementById(id).disabled = !enabled);
+
+    let sendCommand = null;
+
+    document.getElementById("btnConnect").addEventListener("click", async () => {
+      try {
+        log("Requesting device...");
+        const SERVICE_UUID = "442f1570-8a00-9a28-cbe1-e1d4212d53eb";
+
+        const device = await navigator.bluetooth.requestDevice({
+          filters: [{ services: [SERVICE_UUID] }],
+        });
+
+        log(`Found: ${device.name ?? device.id}`);
+        const server = await device.gatt.connect();
+        const service = await server.getPrimaryService(SERVICE_UUID);
+        const characteristics = await service.getCharacteristics();
+
+        const notifyChar = characteristics.find(c => c.properties.notify);
+        const writeChar = characteristics.find(c => c.properties.write || c.properties.writeWithoutResponse) ?? notifyChar;
+
+        if (!notifyChar || !writeChar) { log("ERROR: characteristics not found"); return; }
+
+        await notifyChar.startNotifications();
+        notifyChar.addEventListener("characteristicvaluechanged", (event) => {
+          const value = event.target.value;
+          const uid = Array.from(new Uint8Array(value.buffer)).join("-");
+          log(`Hit: ${uid}`);
+        });
+
+        sendCommand = async (bytes) => {
+          await writeChar.writeValueWithoutResponse(new Uint8Array(bytes));
+        };
+
+        device.addEventListener("gattserverdisconnected", () => {
+          log("Disconnected");
+          sendCommand = null;
+          setButtonsEnabled(false);
+        });
+
+        log("Connected! Listening for hits...");
+        setButtonsEnabled(true);
+      } catch (err) {
+        log(`ERROR: ${err.message}`);
+      }
+    });
+
+    const cmd16 = (overrides) => {
+      const out = new Array(16).fill(0);
+      for (const [i, v] of Object.entries(overrides)) out[Number(i)] = v;
+      return out;
+    };
+
+    document.getElementById("btnRed").addEventListener("click", () =>
+      sendCommand?.(cmd16({ 0: 0x14, 1: 255, 12: 0x14, 15: 0x01 })));
+
+    document.getElementById("btnGreen").addEventListener("click", () =>
+      sendCommand?.(cmd16({ 0: 0x14, 2: 255, 12: 0x14, 15: 0x01 })));
+
+    document.getElementById("btnBlink").addEventListener("click", () =>
+      sendCommand?.(cmd16({ 0: 0x17, 1: 255, 2: 255, 3: 255, 12: 0x1e, 15: 0x01 })));
+
+    document.getElementById("btnWave").addEventListener("click", () =>
+      sendCommand?.(cmd16({ 0: 0x11, 1: 255, 6: 255, 10: 0x10, 12: 0x05 })));
+
+    document.getElementById("btnClear").addEventListener("click", () =>
+      sendCommand?.(new Array(20).fill(0)));
+  </script>
+</body>
+</html>
