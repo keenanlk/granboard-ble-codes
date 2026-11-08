@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GranBoard: plain browser example</title>
+    <style>
+      body { font-family: system-ui, sans-serif; max-width: 40rem; margin: 2rem auto; padding: 0 1rem; }
+      button { margin: 0 0.25rem 0.5rem 0; padding: 0.5rem 0.9rem; }
+      #log { background: #111; color: #eee; padding: 0.75rem; height: 16rem; overflow: auto; font: 13px ui-monospace, monospace; }
+    </style>
+  </head>
+  <body>
+    <h1>GranBoard</h1>
+    <p id="status">Not connected. Web Bluetooth works in Chrome, Edge and Opera.</p>
+
+    <button id="connect">Connect</button>
+    <button data-action="ring" disabled>Light ring</button>
+    <button data-action="sweep" disabled>Sweep</button>
+    <button data-action="clear" disabled>Clear</button>
+    <button data-action="disconnect" disabled>Disconnect</button>
+    <label><input id="flash" type="checkbox" checked /> Flash segment on hit</label>
+
+    <pre id="log"></pre>
+
+    <script type="module">
+      import { connectWebBluetooth, isWebBluetoothAvailable, Colors } from "https://esm.sh/granboard@0.1.0";
+
+      const $ = (sel) => document.querySelector(sel);
+      const log = (msg) => ($("#log").textContent = `${msg}\n` + $("#log").textContent);
+      const setConnected = (on) => {
+        $("#connect").disabled = on;
+        document.querySelectorAll("[data-action]").forEach((b) => (b.disabled = !on));
+      };
+
+      if (!isWebBluetoothAvailable()) {
+        $("#connect").disabled = true;
+        $("#status").textContent = "This browser has no Web Bluetooth. Try Chrome, Edge or Opera.";
+      }
+
+      let board = null;
+
+      // connectWebBluetooth shows the device picker, so it has to run inside a click handler.
+      $("#connect").addEventListener("click", async () => {
+        try {
+          board = await connectWebBluetooth({ minWriteIntervalMs: 20 });
+        } catch (err) {
+          log(`connect failed: ${err.message}`);
+          return;
+        }
+        $("#status").textContent = `Connected to ${board.device.name ?? "GranBoard"}`;
+        setConnected(true);
+
+        board.onHit((hit) => {
+          log(`${hit.id.padEnd(8)} ${hit.score} pts`);
+          if ($("#flash").checked) board.highlightHit(hit);
+        });
+        board.onUnknown(({ code }) => log(`unknown code ${code}`));
+        board.onDisconnect(() => {
+          $("#status").textContent = "Disconnected";
+          setConnected(false);
+        });
+      });
+
+      const actions = {
+        ring: () => board.lightRing(Colors.GREEN),
+        sweep: () => board.sweep(),
+        clear: () => board.clear(),
+        disconnect: () => board.disconnect(),
+      };
+      document.querySelectorAll("[data-action]").forEach((button) =>
+        button.addEventListener("click", () => actions[button.dataset.action]().catch((e) => log(e.message))),
+      );
+    </script>
+  </body>
+</html>
