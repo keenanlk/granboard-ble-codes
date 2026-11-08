@@ -6,3 +6,4 @@ dist/
 target/
 .build/
 .swiftpm/
+.impeccable/

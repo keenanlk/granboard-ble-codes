@@ -89,6 +89,18 @@ write(buildClearCommand());
 
 `decodeHit` returns `null` for codes it doesn't recognize. `client.onUnknown` hands you those codes so you can report them.
 
+## Examples
+
+Runnable examples live in the [repository](https://github.com/keenanlk/granboard-ble-codes/tree/main/examples):
+
+| Example | Stack |
+|---|---|
+| [web-vanilla](https://github.com/keenanlk/granboard-ble-codes/tree/main/examples/web-vanilla) | One HTML file, Web Bluetooth, loaded from a CDN |
+| [react](https://github.com/keenanlk/granboard-ble-codes/tree/main/examples/react) | React + Vite with a `useGranboard` hook |
+| [react-native](https://github.com/keenanlk/granboard-ble-codes/tree/main/examples/react-native) | Expo + `react-native-ble-plx` transport |
+| [node](https://github.com/keenanlk/granboard-ble-codes/tree/main/examples/node) | Node.js CLI with a `@stoprocent/noble` transport |
+| [protocol-only](https://github.com/keenanlk/granboard-ble-codes/tree/main/examples/protocol-only) | `decodeHit` and command builders, no BLE |
+
 ## API
 
 ### Hits

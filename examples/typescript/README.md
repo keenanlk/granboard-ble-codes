@@ -1,5 +1,9 @@
 # GranBoard BLE — TypeScript Example
 
+> **For new projects, use the [`granboard`](../../packages/granboard) npm package** (`npm install granboard`). It ships the decoder, command builders and a Web Bluetooth client from this example, with types and tests. See [`../web-vanilla`](../web-vanilla) for the same page built on the package, and the other [examples](../../README.md#examples) for React, React Native, Node and protocol-only use.
+>
+> This folder is kept as a dependency-free reference that implements the protocol from scratch in one file ([granboard.ts](granboard.ts)).
+
 ## Requirements
 
 - Node.js 18+

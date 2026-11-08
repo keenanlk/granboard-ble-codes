@@ -1,0 +1,23 @@
+{
+  "expo": {
+    "name": "GranBoard Example",
+    "slug": "granboard-example",
+    "version": "1.0.0",
+    "ios": {
+      "bundleIdentifier": "com.example.granboard"
+    },
+    "android": {
+      "package": "com.example.granboard"
+    },
+    "plugins": [
+      [
+        "react-native-ble-plx",
+        {
+          "isBackgroundEnabled": false,
+          "neverForLocation": true,
+          "bluetoothAlwaysPermission": "Connect to your GranBoard dartboard"
+        }
+      ]
+    ]
+  }
+}
