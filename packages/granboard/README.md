@@ -56,6 +56,23 @@ const transport: GranboardTransport = {
 const board = await GranboardClient.create(transport);
 ```
 
+## Targets and Cricket
+
+Light one or more numbers until you send another command, for a target or a set of open numbers:
+
+```ts
+await board.lightNumbers([20]);                 // one target
+await board.setNumberColors({ 20: 0x05, 19: 0x02 }); // each number its own color
+
+// Cricket: marks per player; lights every number not yet closed by all players
+await board.showCricket([
+  { 20: 3, 19: 1 },
+  { 20: 3, 18: 2 },
+]); // lights 15, 16, 17, 18, 19
+```
+
+`cricketOpenNumbers(players)` returns the same list without sending anything. Two limits come from the board itself: bull can't be lit this way, and colors are palette indices rather than RGB. Only `0x05` (orange) is confirmed; please report what `0x01`-`0x07` look like on your board.
+
 ## Just the protocol
 
 If you already have your own BLE layer, use the pure functions:
@@ -95,7 +112,9 @@ write(buildClearCommand());
 | `blink(color, duration?)` | flash the ring, then off |
 | `wave(colorUp, colorDown, speed?)` | two-color wave |
 | `lightSegment(n, color, { blinks?, duration? })` | blink one number's segment |
-| `lightNumbers(numbers, paletteColor?)` | persistently light numbers 1-20 (e.g. open Cricket numbers) |
+| `lightNumbers(numbers, paletteColor?)` | persistently light numbers 1-20 in one color, e.g. a target |
+| `setNumberColors({ 20: 0x05, 19: 0x02 })` | persistently light numbers, each in its own palette color |
+| `showCricket(players, paletteColor?)` | light the Cricket numbers not yet closed by every player |
 | `clear()` | all LEDs off |
 | `highlightHit(hit, colors?)` | the suggested hit effect: red single, green double, yellow triple, blue bull |
 | `sweep({ stepMs?, from?, to?, signal? })` | clockwise gradient sweep, then blink |
@@ -104,7 +123,7 @@ write(buildClearCommand());
 
 ### Command builders
 
-`buildHitCommand`, `buildBlinkCommand`, `buildWaveCommand`, `buildLightRingCommand`, `buildPersistentNumbersCommand`, `buildClearCommand` all return a `Uint8Array`. The package also exports `Colors`, `PaletteColor`, `LED_POSITIONS`, `CLOCKWISE_ORDER`, `SERVICE_UUID`, and `lerpColor`.
+`buildHitCommand`, `buildBlinkCommand`, `buildWaveCommand`, `buildLightRingCommand`, `buildPersistentNumbersCommand`, `buildNumberColorsCommand`, `buildClearCommand` all return a `Uint8Array`. The package also exports `Colors`, `PaletteColor`, `LED_POSITIONS`, `CLOCKWISE_ORDER`, `SERVICE_UUID`, and `lerpColor`.
 
 ## Disclaimer
 
