@@ -4,6 +4,12 @@
 
 There is almost no public documentation about how GranBoard communicates over BLE. This repository aims to change that by providing a complete, open reference for developers building apps, tools, or integrations for the GranBoard.
 
+**Building in JavaScript or TypeScript?** Use the [`granboard`](packages/granboard) npm package. It decodes hits and builds LED commands, and it works with Web Bluetooth or any other BLE stack:
+
+```bash
+npm install granboard
+```
+
 ---
 
 ## Table of Contents
