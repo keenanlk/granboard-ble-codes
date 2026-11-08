@@ -12,8 +12,29 @@ npm install granboard
 
 ---
 
+## Examples
+
+Each example connects, logs hits, flashes the hit segment, lights the ring, runs the sweep, and clears the LEDs, unless noted otherwise. The JavaScript examples install `granboard` from npm.
+
+| Example | Stack | What it shows |
+|---|---|---|
+| [`examples/web-vanilla`](examples/web-vanilla) | One HTML file, Web Bluetooth, CDN import | `connectWebBluetooth` with no build step |
+| [`examples/react`](examples/react) | React + Vite, Web Bluetooth | A `useGranboard` hook and a small component |
+| [`examples/react-native`](examples/react-native) | Expo + `react-native-ble-plx` | A `GranboardTransport` adapter and a screen using `GranboardClient.create` |
+| [`examples/node`](examples/node) | Node.js + `@stoprocent/noble` | A noble transport adapter and a CLI that prints hits |
+| [`examples/protocol-only`](examples/protocol-only) | Any JS runtime, no BLE | `decodeHit` and the command builders, for your own BLE layer |
+| [`examples/typescript`](examples/typescript) | Browser, no dependencies | The protocol implemented from scratch in one file |
+| [`examples/python`](examples/python) | Python + `bleak` | Standalone protocol implementation |
+| [`examples/rust`](examples/rust) | Rust + `btleplug` | Standalone protocol implementation |
+| [`examples/swift`](examples/swift) | Swift + CoreBluetooth (macOS) | Standalone protocol implementation |
+
+The Bluetooth paths in the `granboard` package examples have not been tested on a real board yet. They type-check and build, and `protocol-only` runs without hardware.
+
+---
+
 ## Table of Contents
 
+- [Examples](#examples)
 - [Overview](#overview)
 - [Hit Detection Protocol](#hit-detection-protocol)
   - [Decoding Steps](#decoding-steps)
