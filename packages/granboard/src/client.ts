@@ -6,12 +6,14 @@ import {
   buildClearCommand,
   buildHitCommand,
   buildLightRingCommand,
+  buildNumberColorsCommand,
   buildPersistentNumbersCommand,
   buildWaveCommand,
   lerpColor,
   type HitCommandOptions,
   type RGB,
 } from "./commands.js";
+import { cricketOpenNumbers, type CricketMarks } from "./cricket.js";
 import { decodeHit, toBytes, toCode, type Hit } from "./hits.js";
 
 /**
@@ -140,8 +142,23 @@ export class GranboardClient {
     return this.send(buildHitCommand(dartNumber, color, options));
   }
 
+  /** Persistently light dart numbers (1-20) in one palette color, e.g. a target or Cricket's open numbers. */
   lightNumbers(dartNumbers: Iterable<number>, paletteColor: number = PaletteColor.ORANGE): Promise<void> {
     return this.send(buildPersistentNumbersCommand(dartNumbers, paletteColor));
+  }
+
+  /** Persistently light dart numbers (1-20), each in its own palette color. Unlisted numbers turn off. */
+  setNumberColors(colors: Partial<Record<number, number>> | ReadonlyMap<number, number>): Promise<void> {
+    return this.send(buildNumberColorsCommand(colors));
+  }
+
+  /**
+   * Light the Cricket numbers that every player hasn't closed yet. Call it
+   * again after each dart. Bull is in play but can't be lit by the board.
+   */
+  showCricket(players: readonly CricketMarks[], paletteColor: number = PaletteColor.ORANGE): Promise<void> {
+    const open = cricketOpenNumbers(players);
+    return open.length ? this.lightNumbers(open, paletteColor) : this.clear();
   }
 
   clear(): Promise<void> {

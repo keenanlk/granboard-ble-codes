@@ -136,6 +136,30 @@ export function buildPersistentNumbersCommand(
   return cmd;
 }
 
+/**
+ * Persistently light dart numbers (1-20), each with its own board palette
+ * color. Numbers not in the map are turned off. Accepts a plain object
+ * (`{ 20: 0x05, 19: 0x02 }`) or a `Map`. A palette color of 0 turns that
+ * number off. Bull is not addressable in this format.
+ *
+ * Only `PaletteColor.ORANGE` (0x05) is confirmed; other indices 0x01-0x07
+ * light in firmware-defined colors that have not been documented yet.
+ */
+export function buildNumberColorsCommand(
+  colors: Partial<Record<number, number>> | ReadonlyMap<number, number>,
+): Uint8Array {
+  const entries: [number, number][] =
+    colors instanceof Map
+      ? [...colors.entries()]
+      : Object.entries(colors).map(([n, c]) => [Number(n), c as number]);
+  const cmd = new Uint8Array(20);
+  for (const [n, color] of entries) {
+    assertDartNumber(n);
+    cmd[n - 1] = byte(color, "paletteColor");
+  }
+  return cmd;
+}
+
 /** Turn every LED off. */
 export function buildClearCommand(): Uint8Array {
   return new Uint8Array(20);
