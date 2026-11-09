@@ -20,12 +20,16 @@ export type SegmentId =
   | "MISS"
   | "RESET_BUTTON";
 
+/** A numbered board segment, 1-20. Bull is 25 and is typed separately. */
 export type DartNumber =
   | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
   | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20;
 
+/** What a segment id means: where on the board it is and what it scores. */
 export interface Segment {
+  /** Canonical id, e.g. `"TRP_20"`. */
   id: SegmentId;
+  /** Which ring of the board was hit, or `"miss"` / `"button"`. */
   ring: SegmentRing;
   /** Dart number 1-20, 25 for bull/double bull, `null` for miss and the button. */
   number: DartNumber | 25 | null;

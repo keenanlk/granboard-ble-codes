@@ -7,3 +7,4 @@ target/
 .build/
 .swiftpm/
 .impeccable/
+packages/granboard/docs/

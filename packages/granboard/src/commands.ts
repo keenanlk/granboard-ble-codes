@@ -1,8 +1,12 @@
 import type { DartNumber } from "./segments.js";
 
+/** A color for the 16-byte LED commands. Each channel is an integer 0-255. */
 export interface RGB {
+  /** Red, 0-255. */
   r: number;
+  /** Green, 0-255. */
   g: number;
+  /** Blue, 0-255. */
   b: number;
 }
 
@@ -66,6 +70,7 @@ function assertDartNumber(n: number): asserts n is DartNumber {
   }
 }
 
+/** Options for {@link buildHitCommand} and {@link GranboardClient.lightSegment}. */
 export interface HitCommandOptions {
   /** Number of fade-out blinks; 1, 2 or 3. Defaults to 1. */
   blinks?: 1 | 2 | 3;
