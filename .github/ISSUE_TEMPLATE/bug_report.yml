@@ -1,0 +1,52 @@
+name: Bug report
+description: Something is broken in the granboard package, the demo, or an example.
+title: "bug: "
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Where is the bug?
+      options:
+        - granboard npm package
+        - Live demo
+        - An example
+        - Protocol reference (README)
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Package version
+      description: Run `npm ls granboard`. Leave blank for the demo.
+      placeholder: 0.2.0
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Browser, OS, runtime and BLE library (for example "Chrome 142 on macOS", "React Native 0.88 + react-native-ble-plx 3.5").
+    validations:
+      required: true
+  - type: input
+    id: model
+    attributes:
+      label: Board model
+      placeholder: GranBoard 3s
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Include a minimal code sample if you can.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or error output
+      render: text

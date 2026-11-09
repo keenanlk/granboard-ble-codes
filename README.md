@@ -691,7 +691,12 @@ Other GranBoard models likely use the same protocol but have not been verified. 
 
 ## Contributing
 
-Contributions are welcome! If you've discovered additional protocol details, tested with other board models, or found corrections, please open an issue or pull request.
+Contributions are welcome, including new or corrected hit codes, LED command findings, results from other board models, and fixes to the package, demo or examples.
+
+- Found an unknown code or tested another model? Open a [protocol finding](https://github.com/keenanlk/granboard-ble-codes/issues/new?template=protocol_finding.yml). No code needed.
+- Want to send a PR? Read [CONTRIBUTING.md](CONTRIBUTING.md) for setup, PR rules and what CI checks.
+
+Please follow the [Code of Conduct](CODE_OF_CONDUCT.md), and report security issues privately as described in [SECURITY.md](SECURITY.md).
 
 ## Disclaimer
 

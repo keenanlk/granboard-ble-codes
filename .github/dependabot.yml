@@ -1,0 +1,44 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]
+    commit-message:
+      prefix: ci
+
+  - package-ecosystem: npm
+    directories:
+      - /packages/granboard
+      - /demo
+    schedule:
+      interval: monthly
+    groups:
+      dev-dependencies:
+        dependency-type: development
+        update-types: [minor, patch]
+    commit-message:
+      prefix: build
+
+  # Example dependencies: minor and patch only, so the examples stay on the
+  # major versions their READMEs describe. React Native is left out because
+  # Expo pins compatible versions (`npx expo install --fix`).
+  - package-ecosystem: npm
+    directories:
+      - /examples/node
+      - /examples/protocol-only
+      - /examples/react
+      - /examples/typescript
+    schedule:
+      interval: monthly
+    groups:
+      examples:
+        patterns: ["*"]
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    commit-message:
+      prefix: build

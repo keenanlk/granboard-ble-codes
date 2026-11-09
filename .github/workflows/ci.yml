@@ -1,0 +1,122 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  package:
+    name: package (node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [20, 22, 24]
+    defaults:
+      run:
+        working-directory: packages/granboard
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: packages/granboard/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - name: Docs build (fails on undocumented exports)
+        run: npm run docs
+
+  demo:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: demo
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: demo/package-lock.json
+      - run: npm ci
+      - run: npm run build
+
+  examples-js:
+    name: example (${{ matrix.example }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - example: protocol-only
+            run: npm run typecheck && npm start
+          - example: react
+            run: npm run build
+          - example: node
+            # noble's native install isn't needed to type-check.
+            install: npm ci --ignore-scripts
+            run: npm run typecheck
+          - example: react-native
+            install: npm ci --ignore-scripts
+            run: npm run typecheck
+          - example: typescript
+            run: npm run build
+    defaults:
+      run:
+        working-directory: examples/${{ matrix.example }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: examples/${{ matrix.example }}/package-lock.json
+      - run: ${{ matrix.install || 'npm ci' }}
+      - run: ${{ matrix.run }}
+
+  example-python:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: examples/python
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: python -m py_compile granboard.py
+
+  example-rust:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: examples/rust
+    steps:
+      - uses: actions/checkout@v7
+      - run: sudo apt-get update && sudo apt-get install -y libdbus-1-dev pkg-config
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: examples/rust
+      - run: cargo check --locked
+
+  example-swift:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: examples/swift
+    steps:
+      - uses: actions/checkout@v7
+      - run: swift build

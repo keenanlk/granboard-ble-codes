@@ -1,0 +1,53 @@
+name: Protocol finding
+description: An unknown hit code, LED command behavior, a correction, or results from another board model.
+title: "protocol: "
+labels: ["protocol"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks! Protocol findings are how this reference grows. Please share only codes you captured from your own board.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What did you find?
+      options:
+        - Unknown or new hit code
+        - LED command behavior
+        - Correction to the reference
+        - Tested another board model
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: model
+    attributes:
+      label: Board model and firmware
+      description: For example "GranBoard 3s". Add the firmware version if you know it.
+      placeholder: GranBoard 3s
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: |
+        For a hit code: the raw code (for example `51-46-52-64`) and where the dart landed.
+        For an LED command: the bytes you wrote and what the board did.
+      placeholder: |
+        Code: 51-46-52-64
+        Dart landed in: triple 20
+    validations:
+      required: true
+  - type: textarea
+    id: how
+    attributes:
+      label: How you captured it
+      description: The tool or code you used, such as the live demo, the granboard package (`onUnknown`), nRF Connect, or your own app.
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirmation
+      options:
+        - label: I captured this from my own board and didn't copy it from the official GranBoard app.
+          required: true
