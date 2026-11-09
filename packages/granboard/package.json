@@ -57,7 +57,7 @@
     "tsup": "^8.3.5",
     "typedoc": "^0.28.20",
     "typescript": "^5.6.3",
-    "vitest": "^2.1.8"
+    "vitest": "^5.1.0"
   },
   "homepage": "https://keenanlk.github.io/granboard-ble-codes/api/"
 }
