@@ -17,6 +17,9 @@
     "url": "git+https://github.com/keenanlk/granboard-ble-codes.git",
     "directory": "packages/granboard"
   },
+  "bugs": {
+    "url": "https://github.com/keenanlk/granboard-ble-codes/issues"
+  },
   "type": "module",
   "sideEffects": false,
   "main": "./dist/index.cjs",

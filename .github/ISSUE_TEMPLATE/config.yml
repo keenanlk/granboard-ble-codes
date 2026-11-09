@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/keenanlk/granboard-ble-codes/security/advisories/new
+    about: Please report security problems privately, not as a public issue.
+  - name: API reference
+    url: https://keenanlk.github.io/granboard-ble-codes/api/
+    about: Documentation for every export in the granboard package.
