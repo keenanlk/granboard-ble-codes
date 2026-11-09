@@ -8,6 +8,8 @@ Built from the community [GranBoard BLE protocol reference](https://github.com/k
 npm install granboard
 ```
 
+**[API reference](https://keenanlk.github.io/granboard-ble-codes/api/)** · [Live demo](https://keenanlk.github.io/granboard-ble-codes/) · [Examples](https://github.com/keenanlk/granboard-ble-codes/tree/main/examples)
+
 ## Browser (Web Bluetooth)
 
 Works in Chrome, Edge, and Opera. `connectWebBluetooth` has to be called from a user gesture.
@@ -102,6 +104,8 @@ Runnable examples live in the [repository](https://github.com/keenanlk/granboard
 | [protocol-only](https://github.com/keenanlk/granboard-ble-codes/tree/main/examples/protocol-only) | `decodeHit` and command builders, no BLE |
 
 ## API
+
+A summary of the main exports. The [API reference](https://keenanlk.github.io/granboard-ble-codes/api/) has every export, type and parameter.
 
 ### Hits
 

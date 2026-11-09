@@ -1,11 +1,11 @@
-name: Deploy demo to GitHub Pages
+name: Deploy demo and API docs to GitHub Pages
 
 on:
   push:
     branches: [main]
     paths:
       - "demo/**"
-      - "packages/granboard/src/**"
+      - "packages/granboard/**"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -30,11 +30,18 @@ jobs:
         with:
           node-version: 20
           cache: npm
-          cache-dependency-path: demo/package-lock.json
+          cache-dependency-path: |
+            demo/package-lock.json
+            packages/granboard/package-lock.json
       - run: npm ci
       - run: npm run build
         env:
           BASE: /${{ github.event.repository.name }}/
+      # API reference from the package's TSDoc comments, served at /api/.
+      - run: npm ci
+        working-directory: packages/granboard
+      - run: npm run docs -- --out ../../demo/dist/api
+        working-directory: packages/granboard
       - uses: actions/upload-pages-artifact@v3
         with:
           path: demo/dist

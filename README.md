@@ -10,6 +10,8 @@ There is almost no public documentation about how GranBoard communicates over BL
 npm install granboard
 ```
 
+The [API reference](https://keenanlk.github.io/granboard-ble-codes/api/) documents every export.
+
 **Have a board?** Try the [live demo](https://keenanlk.github.io/granboard-ble-codes/) in Chrome, Edge or Opera. It shows hits as they land and the exact bytes behind every LED command. No board? Click the dartboard to simulate throws.
 
 ---

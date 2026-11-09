@@ -32,6 +32,7 @@ export interface GranboardTransport {
   disconnect?(): Promise<void> | void;
 }
 
+/** Options for {@link GranboardClient.create} and {@link connectWebBluetooth}. */
 export interface GranboardClientOptions {
   /**
    * Minimum gap in ms between consecutive writes. The board can drop
@@ -64,6 +65,19 @@ const sleep = (ms: number, signal?: AbortSignal) =>
     signal?.addEventListener("abort", onAbort, { once: true });
   });
 
+/**
+ * A connected GranBoard. Decodes notifications into {@link Hit}s and sends
+ * LED commands through a queue so they reach the board in order.
+ *
+ * Create one with {@link GranboardClient.create} from any {@link GranboardTransport},
+ * or with {@link connectWebBluetooth} in a browser.
+ *
+ * ```ts
+ * const board = await GranboardClient.create(transport);
+ * board.onHit((hit) => board.highlightHit(hit));
+ * await board.sweep();
+ * ```
+ */
 export class GranboardClient {
   private readonly hitListeners = new Set<Listener<Hit>>();
   private readonly unknownListeners = new Set<Listener<{ code: string; raw: Uint8Array }>>();
@@ -86,6 +100,7 @@ export class GranboardClient {
     return client;
   }
 
+  /** `false` once the link has dropped or {@link disconnect} was called. */
   get isConnected(): boolean {
     return this.connected;
   }
@@ -102,6 +117,7 @@ export class GranboardClient {
     return () => this.unknownListeners.delete(listener);
   }
 
+  /** Called once when the link drops or {@link disconnect} is called. Returns an unsubscribe function. */
   onDisconnect(listener: Listener<void>): () => void {
     this.disconnectListeners.add(listener);
     return () => this.disconnectListeners.delete(listener);
@@ -126,18 +142,22 @@ export class GranboardClient {
     return next;
   }
 
+  /** Light the whole ring in one color until the next command. */
   lightRing(color: RGB): Promise<void> {
     return this.send(buildLightRingCommand(color));
   }
 
+  /** Flash the whole ring, then turn it off after `duration` board frames (default `0x1E`). */
   blink(color: RGB, duration?: number): Promise<void> {
     return this.send(buildBlinkCommand(color, duration));
   }
 
+  /** Run a two-color wave around the ring. `speed` defaults to `0x05`. */
   wave(colorUp: RGB, colorDown: RGB, speed?: number): Promise<void> {
     return this.send(buildWaveCommand(colorUp, colorDown, speed));
   }
 
+  /** Blink one dart number's (1-20) segment of the ring. */
   lightSegment(dartNumber: number, color: RGB, options?: HitCommandOptions): Promise<void> {
     return this.send(buildHitCommand(dartNumber, color, options));
   }
@@ -161,6 +181,7 @@ export class GranboardClient {
     return open.length ? this.lightNumbers(open, paletteColor) : this.clear();
   }
 
+  /** Turn every LED off. */
   clear(): Promise<void> {
     return this.send(buildClearCommand());
   }

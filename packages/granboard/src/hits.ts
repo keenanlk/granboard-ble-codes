@@ -3,6 +3,14 @@ import { SEGMENT_CODES, describeSegment, type Segment } from "./segments.js";
 /** Anything that holds the bytes of a BLE notification. */
 export type BytesLike = Uint8Array | ArrayBuffer | DataView | ArrayLike<number>;
 
+/**
+ * A decoded dart hit, miss or button press, as returned by {@link decodeHit}
+ * and passed to {@link GranboardClient.onHit} listeners.
+ *
+ * ```ts
+ * { id: "TRP_20", ring: "triple", number: 20, multiplier: 3, score: 60, code: "51-46-52-64", raw }
+ * ```
+ */
 export interface Hit extends Segment {
   /** Dash-joined decimal byte string, e.g. `"51-46-52-64"`. */
   code: string;

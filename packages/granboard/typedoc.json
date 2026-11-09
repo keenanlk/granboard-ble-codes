@@ -1,0 +1,45 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": [
+    "src/index.ts"
+  ],
+  "tsconfig": "tsconfig.json",
+  "out": "docs",
+  "name": "granboard",
+  "readme": "README.md",
+  "includeVersion": true,
+  "excludePrivate": true,
+  "excludeInternal": true,
+  "sort": [
+    "kind",
+    "instance-first",
+    "source-order"
+  ],
+  "categorizeByGroup": true,
+  "navigationLinks": {
+    "GitHub": "https://github.com/keenanlk/granboard-ble-codes",
+    "npm": "https://www.npmjs.com/package/granboard",
+    "Demo": "https://keenanlk.github.io/granboard-ble-codes/"
+  },
+  "sourceLinkTemplate": "https://github.com/keenanlk/granboard-ble-codes/blob/main/packages/granboard/{path}#L{line}",
+  "validation": {
+    "notExported": true,
+    "invalidLink": true,
+    "notDocumented": true
+  },
+  "treatWarningsAsErrors": true,
+  "requiredToBeDocumented": [
+    "Class",
+    "Interface",
+    "Function",
+    "Method",
+    "Variable",
+    "TypeAlias",
+    "Accessor"
+  ],
+  "intentionallyNotExported": [
+    "Device",
+    "Bluetooth",
+    "Listener"
+  ]
+}

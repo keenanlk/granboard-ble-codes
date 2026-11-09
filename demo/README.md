@@ -15,4 +15,4 @@ Open the printed `localhost` URL in Chrome, Edge or Opera. Web Bluetooth only wo
 
 ## Deploy
 
-`.github/workflows/pages.yml` builds and deploys it to GitHub Pages on every push to `main` that touches `demo/` or the package source. Turn Pages on once under **Settings → Pages → Source: GitHub Actions**.
+`.github/workflows/pages.yml` builds and deploys it to GitHub Pages on every push to `main` that touches `demo/` or `packages/granboard/`. The same workflow builds the package's API reference with TypeDoc (`npm run docs` in `packages/granboard`) and serves it at `/api/`. Turn Pages on once under **Settings → Pages → Source: GitHub Actions**.
