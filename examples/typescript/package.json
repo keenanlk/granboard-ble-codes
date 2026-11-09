@@ -7,7 +7,7 @@
     "serve": "tsc && npx serve ."
   },
   "devDependencies": {
-    "@types/web-bluetooth": "^0.0.21",
+    "@types/web-bluetooth": "^0.0.22",
     "serve": "^14.0.0",
     "typescript": "^5.0.0"
   }
