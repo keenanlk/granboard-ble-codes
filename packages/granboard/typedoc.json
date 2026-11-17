@@ -21,7 +21,7 @@
     "npm": "https://www.npmjs.com/package/granboard",
     "Demo": "https://keenanlk.github.io/granboard-ble-codes/"
   },
-  "sourceLinkTemplate": "https://github.com/keenanlk/granboard-ble-codes/blob/main/packages/granboard/{path}#L{line}",
+  "sourceLinkTemplate": "https://github.com/keenanlk/granboard-ble-codes/blob/main/{path}#L{line}",
   "validation": {
     "notExported": true,
     "invalidLink": true,
